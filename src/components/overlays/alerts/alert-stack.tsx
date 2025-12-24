@@ -1,5 +1,7 @@
 import AlertCard, { type AlertVariant } from "./alert-card"
 
+export type { AlertVariant }
+
 export type AlertMessage = {
   id: string
   message: string
