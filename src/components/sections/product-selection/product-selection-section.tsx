@@ -22,6 +22,8 @@ type ProductSelectionSectionProps = {
   getQuantity: (productId: string) => number
   onQuantityChange: (productId: string, quantity: number) => void
   onQuantityTap: (product: Product) => void
+  search: string
+  onSearchChange: (value: string) => void
 }
 
 function ProductSelectionSection({
@@ -39,6 +41,8 @@ function ProductSelectionSection({
   getQuantity,
   onQuantityChange,
   onQuantityTap,
+  search,
+  onSearchChange,
 }: ProductSelectionSectionProps) {
   const selectedCategory = categories.find(
     (category) => category.id === selectedCategoryId
@@ -78,6 +82,8 @@ function ProductSelectionSection({
           getQuantity={getQuantity}
           onQuantityChange={onQuantityChange}
           onQuantityTap={onQuantityTap}
+          search={search}
+          onSearchChange={onSearchChange}
         />
       </div>
     </section>

@@ -8,7 +8,7 @@ type CategoryGridProps = {
 
 function CategoryGrid({ categories, selectedId, onSelect }: CategoryGridProps) {
   return (
-    <div className="grid flex-1 grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
+    <div className="grid flex-1 grid-cols-2 gap-4 md:grid-cols-3 2xl:grid-cols-5">
       {categories.map((category) => {
         const Icon = category.icon
         const isSelected = selectedId === category.id

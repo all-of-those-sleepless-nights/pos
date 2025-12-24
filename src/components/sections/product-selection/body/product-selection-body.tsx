@@ -18,6 +18,8 @@ type ProductSelectionBodyProps = {
   getQuantity: (productId: string) => number
   onQuantityChange: (productId: string, quantity: number) => void
   onQuantityTap: (product: Product) => void
+  search: string
+  onSearchChange: (value: string) => void
 }
 
 function ProductSelectionBody({
@@ -31,10 +33,9 @@ function ProductSelectionBody({
   getQuantity,
   onQuantityChange,
   onQuantityTap,
+  search,
+  onSearchChange,
 }: ProductSelectionBodyProps) {
-  const selectedCategory = categories.find(
-    (category) => category.id === selectedCategoryId
-  )
   const currentProducts =
     view === "products"
       ? products.filter((product) => product.categoryId === selectedCategoryId)
@@ -56,12 +57,13 @@ function ProductSelectionBody({
       ) : (
         <ProductGrid
           products={currentProducts}
-          selectedCategoryName={selectedCategory?.label}
           onAdd={onAddProduct}
           onDetails={onShowDetails}
           getQuantity={getQuantity}
           onQuantityChange={onQuantityChange}
           onQuantityTap={onQuantityTap}
+          search={search}
+          onSearchChange={onSearchChange}
         />
       )}
     </div>

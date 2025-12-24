@@ -46,6 +46,7 @@ function HomePage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   )
+  const [productSearch, setProductSearch] = useState("")
   const [productQuantities, setProductQuantities] = useState<Record<string, number>>(
     {}
   )
@@ -77,6 +78,7 @@ function HomePage() {
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategoryId(categoryId)
     setSelectionView("products")
+    setProductSearch("")
   }
 
   const handleProductSectionBack = () => {
@@ -85,6 +87,7 @@ function HomePage() {
       return
     }
     setSelectedCategoryId(null)
+    setProductSearch("")
     setActiveSection("home")
   }
 
@@ -99,6 +102,7 @@ function HomePage() {
     setActiveSection("home")
     setSelectionView("categories")
     setSelectedCategoryId(null)
+    setProductSearch("")
     showAlert({
       title: "Order completed",
       message: "Ticket sent for processing.",
@@ -120,6 +124,8 @@ function HomePage() {
       ...prev,
       [product.id]: 0,
     }))
+    setProductSearch("")
+
     showAlert({
       title: "Product added",
       message:
@@ -212,6 +218,8 @@ function HomePage() {
         getQuantity={getProductQuantity}
         onQuantityChange={handleQuantityChange}
         onQuantityTap={handleQuantityTap}
+        search={productSearch}
+        onSearchChange={setProductSearch}
       />
       <OrderSection
         isActive={activeSection === "order"}
