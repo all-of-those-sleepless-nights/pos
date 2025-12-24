@@ -131,7 +131,7 @@ function HomePage() {
       message:
         selectedQuantity === 1
           ? `${product.name} added to the order.`
-          : `${selectedQuantity} × ${product.name} added to the order.`,
+          : `${selectedQuantity} ${product.name} added to the order.`,
       variant: "success",
     })
   }
