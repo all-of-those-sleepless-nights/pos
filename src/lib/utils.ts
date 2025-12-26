@@ -1,9 +1,11 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
+import { POS_CURRENCY_CODE } from "@/constants/types"
+
+const currencyFormatter = new Intl.NumberFormat("en-MY", {
   style: "currency",
-  currency: "USD",
+  currency: POS_CURRENCY_CODE,
   minimumFractionDigits: 2,
 })
 

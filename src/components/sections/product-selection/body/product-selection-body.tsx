@@ -13,13 +13,9 @@ type ProductSelectionBodyProps = {
   products: Product[]
   selectedCategoryId: string | null
   onSelectCategory: (categoryId: string) => void
-  onAddProduct: (product: Product, quantity: number) => void
-  onShowDetails: (product: Product) => void
-  getQuantity: (productId: string) => number
-  onQuantityChange: (productId: string, quantity: number) => void
-  onQuantityTap: (product: Product) => void
+  onAddProduct: (product: Product) => void
+  getCategoryName: (categoryId: string) => string
   search: string
-  onSearchChange: (value: string) => void
 }
 
 function ProductSelectionBody({
@@ -29,12 +25,8 @@ function ProductSelectionBody({
   selectedCategoryId,
   onSelectCategory,
   onAddProduct,
-  onShowDetails,
-  getQuantity,
-  onQuantityChange,
-  onQuantityTap,
+  getCategoryName,
   search,
-  onSearchChange,
 }: ProductSelectionBodyProps) {
   const currentProducts =
     view === "products"
@@ -58,12 +50,8 @@ function ProductSelectionBody({
         <ProductGrid
           products={currentProducts}
           onAdd={onAddProduct}
-          onDetails={onShowDetails}
-          getQuantity={getQuantity}
-          onQuantityChange={onQuantityChange}
-          onQuantityTap={onQuantityTap}
           search={search}
-          onSearchChange={onSearchChange}
+          getCategoryName={getCategoryName}
         />
       )}
     </div>

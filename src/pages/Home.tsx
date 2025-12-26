@@ -1,6 +1,5 @@
 import { useState } from "react"
 
-import ProductDetailOverlay from "@/components/overlays/product-detail/product-detail-overlay"
 import NumericKeypad from "@/components/overlays/numeric-keypad/numeric-keypad"
 import HomeSection from "@/components/sections/home/home-section"
 import OrderSection from "@/components/sections/order/order-section"
@@ -32,8 +31,8 @@ type KeypadContextState =
       allowDecimal: boolean
     }
   | {
-      kind: "product"
-      productId: string
+      kind: "product-add"
+      product: Product
       label: string
       value: number
       allowDecimal: boolean
@@ -47,10 +46,6 @@ function HomePage() {
     null
   )
   const [productSearch, setProductSearch] = useState("")
-  const [productQuantities, setProductQuantities] = useState<Record<string, number>>(
-    {}
-  )
-  const [detailProduct, setDetailProduct] = useState<Product | null>(null)
   const [keypadContext, setKeypadContext] = useState<KeypadContextState | null>(
     null
   )
@@ -61,13 +56,9 @@ function HomePage() {
     orderTotal,
     addProduct,
     updateItem,
-    removeItem,
     clearOrder,
   } = useOrder()
   const { showAlert } = useAlert()
-
-  const getProductQuantity = (productId: string) =>
-    productQuantities[productId] ?? 0
 
   const handleCreateOrder = () => {
     setActiveSection("products")
@@ -110,29 +101,13 @@ function HomePage() {
     })
   }
 
-  const handleProductDetails = (product: Product) => {
-    setDetailProduct(product)
-  }
-
-  const handleAddProduct = (product: Product, quantity?: number) => {
-    const selectedQuantity = quantity ?? getProductQuantity(product.id)
-    if (selectedQuantity <= 0) {
-      return
-    }
-    addProduct(product, selectedQuantity)
-    setProductQuantities((prev) => ({
-      ...prev,
-      [product.id]: 0,
-    }))
-    setProductSearch("")
-
-    showAlert({
-      title: "Product added",
-      message:
-        selectedQuantity === 1
-          ? `${product.name} added to the order.`
-          : `${selectedQuantity} ${product.name} added to the order.`,
-      variant: "success",
+  const handleRequestAddProduct = (product: Product) => {
+    setKeypadContext({
+      kind: "product-add",
+      product,
+      label: `Quantity · ${product.name}`,
+      value: 1,
+      allowDecimal: false,
     })
   }
 
@@ -166,33 +141,21 @@ function HomePage() {
     })
   }
 
-  const handleQuantityChange = (productId: string, quantity: number) => {
-    const safeQuantity = Math.max(0, Math.round(quantity))
-    setProductQuantities((prev) => ({
-      ...prev,
-      [productId]: safeQuantity,
-    }))
-  }
-
-  const handleQuantityTap = (product: Product) => {
-    setKeypadContext({
-      kind: "product",
-      productId: product.id,
-      label: `Quantity · ${product.name}`,
-      value: getProductQuantity(product.id),
-      allowDecimal: false,
-    })
-  }
-
   const handleKeypadConfirm = (value: number) => {
     if (!keypadContext) return
     if (keypadContext.kind === "order") {
       updateItem(keypadContext.itemId, keypadContext.field, value)
-    } else {
-      handleQuantityChange(
-        keypadContext.productId,
-        Math.max(0, Math.round(value))
-      )
+    } else if (keypadContext.kind === "product-add") {
+      const safeQuantity = Math.max(1, Math.round(value))
+      addProduct(keypadContext.product, safeQuantity)
+      showAlert({
+        title: "Product added",
+        message:
+          safeQuantity === 1
+            ? `${keypadContext.product.name} added to the order.`
+            : `${safeQuantity} × ${keypadContext.product.name} added to the order.`,
+        variant: "success",
+      })
     }
     setKeypadContext(null)
   }
@@ -212,12 +175,8 @@ function HomePage() {
         badgeCount={badgeCount}
         onBack={handleProductSectionBack}
         onSelectCategory={handleCategorySelect}
-        onAddProduct={handleAddProduct}
-        onShowDetails={handleProductDetails}
+        onAddProduct={handleRequestAddProduct}
         onOpenOrder={handleOpenOrder}
-        getQuantity={getProductQuantity}
-        onQuantityChange={handleQuantityChange}
-        onQuantityTap={handleQuantityTap}
         search={productSearch}
         onSearchChange={setProductSearch}
       />
@@ -227,27 +186,8 @@ function HomePage() {
         total={orderTotal}
         onBack={handleBackFromOrder}
         onEditField={handleEditField}
-        onRemoveItem={removeItem}
         onDone={handleDone}
         onClear={handleClearOrder}
-      />
-
-      <ProductDetailOverlay
-        product={detailProduct}
-        quantity={detailProduct ? getProductQuantity(detailProduct.id) : 0}
-        onQuantityChange={(value) => {
-          if (!detailProduct) return
-          handleQuantityChange(detailProduct.id, value)
-        }}
-        onQuantityTap={() => {
-          if (!detailProduct) return
-          handleQuantityTap(detailProduct)
-        }}
-        onClose={() => setDetailProduct(null)}
-        onAdd={(product, quantity) => {
-          handleAddProduct(product, quantity)
-          setDetailProduct(null)
-        }}
       />
 
       <NumericKeypad

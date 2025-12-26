@@ -6,12 +6,14 @@ export type Category = {
   icon: LucideIcon;
 };
 
+export const POS_CURRENCY_CODE = "MYR";
+export const POS_CURRENCY_SYMBOL = "RM";
+
 export type Product = {
   id: string;
   name: string;
   price: number;
   categoryId: string;
-  description?: string;
 };
 
 export type OrderItem = {

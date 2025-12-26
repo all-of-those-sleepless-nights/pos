@@ -10,9 +10,28 @@ type OrderSectionProps = {
   total: number
   onBack: () => void
   onEditField: (item: OrderItem, field: EditableOrderField) => void
-  onRemoveItem: (itemId: string) => void
   onDone: () => void
   onClear: () => void
+}
+
+function calculateTotals(items: OrderItem[]) {
+  const quantity = items.reduce((sum, item) => sum + item.quantity, 0)
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.unitPrice * item.quantity,
+    0
+  )
+  const tax = subtotal * 0.06
+  const gross = subtotal + tax
+  const roundedTotal = Math.round(gross * 2) / 2
+  const rounding = roundedTotal - gross
+
+  return {
+    quantity,
+    subtotal,
+    tax,
+    rounding,
+    total: roundedTotal,
+  }
 }
 
 function OrderSection({
@@ -21,25 +40,22 @@ function OrderSection({
   total,
   onBack,
   onEditField,
-  onRemoveItem,
   onDone,
   onClear,
 }: OrderSectionProps) {
+  const totals = calculateTotals(items)
+
   return (
     <section
       className={`${
         isActive ? "flex" : "hidden"
-      } h-full flex-1 flex-col bg-neutral-50 px-6 py-6 relative`}
+      } h-full flex-1 flex-col bg-neutral-50 px-6 py-6`}
     >
       <OrderHeader itemCount={items.length} total={total} onBack={onBack} />
       <div className="mt-6 flex flex-1 flex-col">
-        <OrderItemsList
-          items={items}
-          onEditField={onEditField}
-          onRemove={onRemoveItem}
-        />
+        <OrderItemsList items={items} onEditField={onEditField} />
         <OrderFooter
-          total={total}
+          totals={totals}
           hasItems={items.length > 0}
           onDone={onDone}
           onClear={onClear}

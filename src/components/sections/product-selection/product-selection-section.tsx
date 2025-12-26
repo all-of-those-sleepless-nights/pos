@@ -1,3 +1,5 @@
+import { useEffect, useMemo, useState } from "react"
+
 import type {
   Category,
   Product,
@@ -16,12 +18,8 @@ type ProductSelectionSectionProps = {
   badgeCount: number
   onBack: () => void
   onSelectCategory: (categoryId: string) => void
-  onAddProduct: (product: Product, quantity: number) => void
-  onShowDetails: (product: Product) => void
+  onAddProduct: (product: Product) => void
   onOpenOrder: () => void
-  getQuantity: (productId: string) => number
-  onQuantityChange: (productId: string, quantity: number) => void
-  onQuantityTap: (product: Product) => void
   search: string
   onSearchChange: (value: string) => void
 }
@@ -36,14 +34,29 @@ function ProductSelectionSection({
   onBack,
   onSelectCategory,
   onAddProduct,
-  onShowDetails,
   onOpenOrder,
-  getQuantity,
-  onQuantityChange,
-  onQuantityTap,
   search,
   onSearchChange,
 }: ProductSelectionSectionProps) {
+  const [isSearchVisible, setIsSearchVisible] = useState(false)
+
+  const searchEnabled = view === "products" && Boolean(selectedCategoryId)
+
+  useEffect(() => {
+    if (!searchEnabled) {
+      setIsSearchVisible(false)
+    }
+  }, [searchEnabled])
+
+  const categoryLookup = useMemo(() => {
+    const map = new Map<string, string>()
+    categories.forEach((category) => map.set(category.id, category.label))
+    return map
+  }, [categories])
+
+  const getCategoryName = (categoryId: string) =>
+    categoryLookup.get(categoryId) ?? "—"
+
   const selectedCategory = categories.find(
     (category) => category.id === selectedCategoryId
   )
@@ -55,7 +68,7 @@ function ProductSelectionSection({
   const subtitle =
     view === "categories"
       ? "Browse product categories to begin building an order."
-      : "Tap an item to add it quickly or open details for modifiers."
+      : "Tap an item to add it with the quantity keypad."
 
   return (
     <section
@@ -69,6 +82,11 @@ function ProductSelectionSection({
         badgeCount={badgeCount}
         onBack={onBack}
         onOpenOrder={onOpenOrder}
+        searchValue={search}
+        onSearchChange={onSearchChange}
+        showSearchBar={isSearchVisible}
+        onToggleSearch={() => setIsSearchVisible((prev) => !prev)}
+        searchIconVisible={searchEnabled}
       />
       <div className="mt-6 flex flex-1 flex-col">
         <ProductSelectionBody
@@ -78,12 +96,8 @@ function ProductSelectionSection({
           selectedCategoryId={selectedCategoryId}
           onSelectCategory={onSelectCategory}
           onAddProduct={onAddProduct}
-          onShowDetails={onShowDetails}
-          getQuantity={getQuantity}
-          onQuantityChange={onQuantityChange}
-          onQuantityTap={onQuantityTap}
+          getCategoryName={getCategoryName}
           search={search}
-          onSearchChange={onSearchChange}
         />
       </div>
     </section>
