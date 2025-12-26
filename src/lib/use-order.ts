@@ -30,6 +30,8 @@ export function useOrder() {
         name: product.name,
         unitPrice: product.price,
         quantity: safeQuantity,
+        brandId: product.brandId,
+        brandName: product.brandName,
       };
       return [...prev, nextItem];
     });

@@ -7,12 +7,12 @@ import { formatCurrency } from "@/lib/utils"
 
 import type { Product } from "@/constants/types"
 
-type SortKey = "name" | "category" | "price"
+type SortKey = "name" | "brand" | "price"
 
 type ProductGridProps = {
   products: Product[]
   onAdd: (product: Product) => void
-  getCategoryName: (categoryId: string) => string
+  getBrandName: (brandId: string) => string
   search: string
 }
 
@@ -21,7 +21,7 @@ const sortIcons: Record<"asc" | "desc", JSX.Element> = {
   desc: <ArrowDown className="size-4" />,
 }
 
-function ProductGrid({ products, onAdd, getCategoryName, search }: ProductGridProps) {
+function ProductGrid({ products, onAdd, getBrandName, search }: ProductGridProps) {
   const [debouncedSearch, setDebouncedSearch] = useState(search)
   const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: "asc" | "desc" }>(
     {
@@ -52,9 +52,9 @@ function ProductGrid({ products, onAdd, getCategoryName, search }: ProductGridPr
       switch (sortConfig.key) {
         case "name":
           return a.name.localeCompare(b.name) * direction
-        case "category":
-          return getCategoryName(a.categoryId)
-            .localeCompare(getCategoryName(b.categoryId)) * direction
+        case "brand":
+          return getBrandName(a.brandId)
+            .localeCompare(getBrandName(b.brandId)) * direction
         case "price":
           return (a.price - b.price) * direction
         default:
@@ -62,7 +62,7 @@ function ProductGrid({ products, onAdd, getCategoryName, search }: ProductGridPr
       }
     })
     return sorted
-  }, [filteredProducts, sortConfig, getCategoryName])
+  }, [filteredProducts, sortConfig, getBrandName])
 
   const handleSort = (key: SortKey) => {
     setSortConfig((prev) =>
@@ -80,13 +80,13 @@ function ProductGrid({ products, onAdd, getCategoryName, search }: ProductGridPr
   }
 
   return (
-    <div className="flex-1 overflow-auto rounded-3xl border border-border bg-white shadow">
+    <div className="flex-1 overflow-auto rounded-xl border border-border bg-white shadow">
       <table className="min-w-full divide-y divide-neutral-200 text-left">
         <thead className="bg-neutral-50">
           <tr>
             {([
               { key: "name", label: "Name", align: "text-left" },
-              { key: "category", label: "Category", align: "text-left" },
+              { key: "brand", label: "Brand", align: "text-left" },
               { key: "price", label: "Price", align: "text-right" },
             ] as const).map((column) => (
               <th key={column.key} className={`px-4 py-3 ${column.align}`}>
@@ -122,7 +122,7 @@ function ProductGrid({ products, onAdd, getCategoryName, search }: ProductGridPr
                 {product.name}
               </td>
               <td className="px-4 py-3 text-base text-neutral-600">
-                {getCategoryName(product.categoryId)}
+                {getBrandName(product.brandId)}
               </td>
               <td className="px-4 py-3 text-right text-base font-semibold">
                 {formatCurrency(product.price)}

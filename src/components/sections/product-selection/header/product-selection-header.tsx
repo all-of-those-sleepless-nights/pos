@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 
 type ProductSelectionHeaderProps = {
   title: string
-  subtitle?: string
   badgeCount: number
   onBack: () => void
   onOpenOrder: () => void
@@ -17,7 +16,6 @@ type ProductSelectionHeaderProps = {
 
 function ProductSelectionHeader({
   title,
-  subtitle,
   badgeCount,
   onBack,
   onOpenOrder,
@@ -41,10 +39,7 @@ function ProductSelectionHeader({
             Back
           </Button>
           <div>
-            <p className="text-xl font-semibold">{title}</p>
-            {subtitle && (
-              <p className="text-sm text-muted-foreground">{subtitle}</p>
-            )}
+            <p className="text-2xl font-semibold">{title}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -74,7 +69,7 @@ function ProductSelectionHeader({
         </div>
       </div>
       {showSearchBar && (
-        <div className="flex items-center gap-2 rounded-2xl border border-border bg-white px-4 py-2 shadow-sm">
+        <div className="flex items-center gap-2 rounded-xl border border-border bg-white px-4 py-2 shadow-sm">
           <input
             type="search"
             value={searchValue}

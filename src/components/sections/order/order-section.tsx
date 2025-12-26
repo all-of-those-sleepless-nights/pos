@@ -10,6 +10,7 @@ type OrderSectionProps = {
   total: number
   onBack: () => void
   onEditField: (item: OrderItem, field: EditableOrderField) => void
+  onRemoveItem: (itemId: string) => void
   onDone: () => void
   onClear: () => void
 }
@@ -22,8 +23,11 @@ function calculateTotals(items: OrderItem[]) {
   )
   const tax = subtotal * 0.06
   const gross = subtotal + tax
-  const roundedTotal = Math.round(gross * 2) / 2
-  const rounding = roundedTotal - gross
+  const roundingIncrement = 0.05
+  const roundedTotal = Number(
+    (Math.round(gross / roundingIncrement) * roundingIncrement).toFixed(2)
+  )
+  const rounding = Number((roundedTotal - gross).toFixed(2))
 
   return {
     quantity,
@@ -40,10 +44,18 @@ function OrderSection({
   total,
   onBack,
   onEditField,
+  onRemoveItem,
   onDone,
   onClear,
 }: OrderSectionProps) {
   const totals = calculateTotals(items)
+  const brandLookup = new Map<string, string>()
+  items.forEach((item) => {
+    if (item.brandId && !brandLookup.has(item.brandId)) {
+      brandLookup.set(item.brandId, item.brandName ?? "")
+    }
+  })
+  const getBrandName = (brandId: string) => brandLookup.get(brandId) ?? "—"
 
   return (
     <section
@@ -53,7 +65,12 @@ function OrderSection({
     >
       <OrderHeader itemCount={items.length} total={total} onBack={onBack} />
       <div className="mt-6 flex flex-1 flex-col">
-        <OrderItemsList items={items} onEditField={onEditField} />
+        <OrderItemsList
+          items={items}
+          onEditField={onEditField}
+          getBrandName={getBrandName}
+          onRemoveItem={onRemoveItem}
+        />
         <OrderFooter
           totals={totals}
           hasItems={items.length > 0}

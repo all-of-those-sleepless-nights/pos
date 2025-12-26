@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 
 import type {
+  Brand,
   Category,
   Product,
   ProductSelectionView,
@@ -12,12 +13,15 @@ import ProductSelectionHeader from "./header/product-selection-header"
 type ProductSelectionSectionProps = {
   isActive: boolean
   categories: Category[]
+  brands: Brand[]
   products: Product[]
   view: ProductSelectionView
   selectedCategoryId: string | null
+  selectedBrandId: string | null
   badgeCount: number
   onBack: () => void
   onSelectCategory: (categoryId: string) => void
+  onSelectBrand: (brandId: string) => void
   onAddProduct: (product: Product) => void
   onOpenOrder: () => void
   search: string
@@ -27,12 +31,15 @@ type ProductSelectionSectionProps = {
 function ProductSelectionSection({
   isActive,
   categories,
+  brands,
   products,
   view,
   selectedCategoryId,
+  selectedBrandId,
   badgeCount,
   onBack,
   onSelectCategory,
+  onSelectBrand,
   onAddProduct,
   onOpenOrder,
   search,
@@ -40,7 +47,8 @@ function ProductSelectionSection({
 }: ProductSelectionSectionProps) {
   const [isSearchVisible, setIsSearchVisible] = useState(false)
 
-  const searchEnabled = view === "products" && Boolean(selectedCategoryId)
+  const searchEnabled =
+    view === "products" && Boolean(selectedCategoryId && selectedBrandId)
 
   useEffect(() => {
     if (!searchEnabled) {
@@ -48,27 +56,25 @@ function ProductSelectionSection({
     }
   }, [searchEnabled])
 
-  const categoryLookup = useMemo(() => {
+  const brandLookup = useMemo(() => {
     const map = new Map<string, string>()
-    categories.forEach((category) => map.set(category.id, category.label))
+    brands.forEach((brand) => map.set(brand.id, brand.label))
     return map
-  }, [categories])
+  }, [brands])
 
-  const getCategoryName = (categoryId: string) =>
-    categoryLookup.get(categoryId) ?? "—"
+  const getBrandName = (brandId: string) => brandLookup.get(brandId) ?? "—"
 
   const selectedCategory = categories.find(
     (category) => category.id === selectedCategoryId
   )
+  const selectedBrand = brands.find((brand) => brand.id === selectedBrandId)
 
   const title =
     view === "categories"
       ? "Select a category"
-      : selectedCategory?.label ?? "Products"
-  const subtitle =
-    view === "categories"
-      ? "Browse product categories to begin building an order."
-      : "Tap an item to add it with the quantity keypad."
+      : view === "brands"
+        ? selectedCategory?.label ?? "Select brand"
+        : selectedBrand?.label ?? "Products"
 
   return (
     <section
@@ -78,7 +84,6 @@ function ProductSelectionSection({
     >
       <ProductSelectionHeader
         title={title}
-        subtitle={subtitle}
         badgeCount={badgeCount}
         onBack={onBack}
         onOpenOrder={onOpenOrder}
@@ -92,11 +97,14 @@ function ProductSelectionSection({
         <ProductSelectionBody
           view={view}
           categories={categories}
+          brands={brands}
           products={products}
           selectedCategoryId={selectedCategoryId}
+          selectedBrandId={selectedBrandId}
           onSelectCategory={onSelectCategory}
+          onSelectBrand={onSelectBrand}
           onAddProduct={onAddProduct}
-          getCategoryName={getCategoryName}
+          getBrandName={getBrandName}
           search={search}
         />
       </div>

@@ -11,7 +11,7 @@ import type {
   Product,
   ProductSelectionView,
 } from "@/constants/types"
-import { categories, products } from "@/constants/mock-data"
+import { brands, categories, products } from "@/constants/mock-data"
 import { useAlert } from "@/lib/alert-context"
 import { useOrder } from "@/lib/use-order"
 
@@ -45,6 +45,7 @@ function HomePage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   )
+  const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null)
   const [productSearch, setProductSearch] = useState("")
   const [keypadContext, setKeypadContext] = useState<KeypadContextState | null>(
     null
@@ -56,6 +57,7 @@ function HomePage() {
     orderTotal,
     addProduct,
     updateItem,
+    removeItem,
     clearOrder,
   } = useOrder()
   const { showAlert } = useAlert()
@@ -64,20 +66,37 @@ function HomePage() {
     setActiveSection("products")
     setSelectionView("categories")
     setSelectedCategoryId(null)
+    setSelectedBrandId(null)
   }
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategoryId(categoryId)
+    setSelectedBrandId(null)
+    setSelectionView("brands")
+    setProductSearch("")
+  }
+
+  const handleBrandSelect = (brandId: string) => {
+    setSelectedBrandId(brandId)
     setSelectionView("products")
     setProductSearch("")
   }
 
   const handleProductSectionBack = () => {
     if (selectionView === "products") {
+      setSelectionView("brands")
+      setProductSearch("")
+      return
+    }
+    if (selectionView === "brands") {
       setSelectionView("categories")
+      setSelectedBrandId(null)
+      setSelectedCategoryId(null)
+      setProductSearch("")
       return
     }
     setSelectedCategoryId(null)
+    setSelectedBrandId(null)
     setProductSearch("")
     setActiveSection("home")
   }
@@ -93,6 +112,7 @@ function HomePage() {
     setActiveSection("home")
     setSelectionView("categories")
     setSelectedCategoryId(null)
+    setSelectedBrandId(null)
     setProductSearch("")
     showAlert({
       title: "Order completed",
@@ -169,12 +189,15 @@ function HomePage() {
       <ProductSelectionSection
         isActive={activeSection === "products"}
         categories={categories}
+        brands={brands}
         products={products}
         view={selectionView}
         selectedCategoryId={selectedCategoryId}
+        selectedBrandId={selectedBrandId}
         badgeCount={badgeCount}
         onBack={handleProductSectionBack}
         onSelectCategory={handleCategorySelect}
+        onSelectBrand={handleBrandSelect}
         onAddProduct={handleRequestAddProduct}
         onOpenOrder={handleOpenOrder}
         search={productSearch}
@@ -186,6 +209,7 @@ function HomePage() {
         total={orderTotal}
         onBack={handleBackFromOrder}
         onEditField={handleEditField}
+        onRemoveItem={removeItem}
         onDone={handleDone}
         onClear={handleClearOrder}
       />
