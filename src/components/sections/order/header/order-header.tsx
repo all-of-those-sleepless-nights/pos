@@ -1,13 +1,13 @@
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft } from "lucide-react";
 
-import { POS_CURRENCY_SYMBOL } from "@/constants/types"
-import { Button } from "@/components/ui/button"
+import { POS_CURRENCY_SYMBOL } from "@/constants/types";
+import { Button } from "@/components/ui/button";
 
 type OrderHeaderProps = {
-  itemCount: number
-  total: number
-  onBack: () => void
-}
+  itemCount: number;
+  total: number;
+  onBack: () => void;
+};
 
 function OrderHeader({ itemCount, total, onBack }: OrderHeaderProps) {
   return (
@@ -16,22 +16,22 @@ function OrderHeader({ itemCount, total, onBack }: OrderHeaderProps) {
         <Button
           type="button"
           variant="ghost"
-          className="h-14 rounded-2xl border border-border px-6 text-lg"
+          className="h-14 rounded-2xl border border-orange-600 bg-orange-500 pl-3 pr-4 text-2xl font-bold text-white shadow-lg transition hover:bg-orange-600 [&_svg]:size-10 hover:text-white"
           onClick={onBack}
         >
-          <ArrowLeft className="mr-2 size-5" />
+          <ArrowLeft />
           Back
         </Button>
         <div>
-          <p className="text-2xl font-semibold">Current Order</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-[1.58rem] font-semibold">Current Order</p>
+          <p className="text-xs text-muted-foreground">
             {itemCount} item{itemCount === 1 ? "" : "s"} · {POS_CURRENCY_SYMBOL}{" "}
             {total.toFixed(2)}
           </p>
         </div>
       </div>
     </header>
-  )
+  );
 }
 
-export default OrderHeader
+export default OrderHeader;

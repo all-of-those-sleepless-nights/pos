@@ -1,18 +1,18 @@
-import { X } from "lucide-react"
+import { X } from "lucide-react";
 
-import type { EditableOrderField, OrderItem } from "@/constants/types"
-import { POS_CURRENCY_SYMBOL } from "@/constants/types"
-import { formatCurrency } from "@/lib/utils"
+import type { EditableOrderField, OrderItem } from "@/constants/types";
+import { POS_CURRENCY_SYMBOL } from "@/constants/types";
+import { formatCurrency } from "@/lib/utils";
 
 const editableFieldButtonClass =
-  "inline-flex w-fit items-center rounded border border-dashed border-primary/40 px-2 py-1 transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+  "inline-flex w-fit items-center rounded border border-dashed border-primary/40 px-2 py-1 transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
 
 type OrderItemsListProps = {
-  items: OrderItem[]
-  onEditField: (item: OrderItem, field: EditableOrderField) => void
-  getBrandName: (brandId: string) => string
-  onRemoveItem: (itemId: string) => void
-}
+  items: OrderItem[];
+  onEditField: (item: OrderItem, field: EditableOrderField) => void;
+  getBrandName: (brandId: string) => string;
+  onRemoveItem: (itemId: string) => void;
+};
 
 function OrderItemsList({
   items,
@@ -22,7 +22,7 @@ function OrderItemsList({
 }: OrderItemsListProps) {
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="grid grid-cols-8 border-b border-dashed border-neutral-300 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-neutral-500">
+      <div className="grid grid-cols-8 border-b border-dashed border-neutral-300 px-4 py-2 text-[0.75rem] font-semibold uppercase tracking-widest text-neutral-500">
         <span>Qty</span>
         <span className="col-span-4">Item</span>
         <span className="col-span-2 text-right">
@@ -38,7 +38,7 @@ function OrderItemsList({
       {items.map((item) => (
         <div
           key={item.id}
-          className="grid grid-cols-8 items-center border-b border-dashed border-neutral-200 px-4 py-3 text-base"
+          className="grid grid-cols-8 items-center border-b border-dashed border-neutral-200 px-4 py-3 text-sm"
         >
           <button
             type="button"
@@ -49,16 +49,16 @@ function OrderItemsList({
           </button>
           <div className="col-span-4">
             <p className="font-semibold text-neutral-900">{item.name}</p>
-            <div className="flex items-center justify-between text-sm text-neutral-500">
-              <span>{getBrandName(item.brandId)}</span>
-              <button
-                type="button"
-                onClick={() => onEditField(item, "unitPrice")}
-                className={`${editableFieldButtonClass} text-neutral-700`}
-              >
-                Unit: {formatCurrency(item.unitPrice)}
-              </button>
-            </div>
+            <p className="font-semibold text-neutral-700 mb-2">
+              {getBrandName(item.brandId)}
+            </p>
+            <button
+              type="button"
+              onClick={() => onEditField(item, "unitPrice")}
+              className={`${editableFieldButtonClass} text-neutral-700`}
+            >
+              Unit: {formatCurrency(item.unitPrice)}
+            </button>
           </div>
           <div className="col-span-2 flex justify-end font-semibold text-neutral-900">
             <button
@@ -83,7 +83,7 @@ function OrderItemsList({
         </div>
       ))}
     </div>
-  )
+  );
 }
 
-export default OrderItemsList
+export default OrderItemsList;

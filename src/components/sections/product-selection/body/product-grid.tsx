@@ -12,16 +12,23 @@ type SortKey = "name" | "brand" | "price"
 type ProductGridProps = {
   products: Product[]
   onAdd: (product: Product) => void
+  onQuickAdd: (product: Product) => void
   getBrandName: (brandId: string) => string
   search: string
 }
 
 const sortIcons: Record<"asc" | "desc", JSX.Element> = {
-  asc: <ArrowUp className="size-4" />,
-  desc: <ArrowDown className="size-4" />,
+  asc: <ArrowUp className="size-3.5" />,
+  desc: <ArrowDown className="size-3.5" />,
 }
 
-function ProductGrid({ products, onAdd, getBrandName, search }: ProductGridProps) {
+function ProductGrid({
+  products,
+  onAdd,
+  onQuickAdd,
+  getBrandName,
+  search,
+}: ProductGridProps) {
   const [debouncedSearch, setDebouncedSearch] = useState(search)
   const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: "asc" | "desc" }>(
     {
@@ -74,7 +81,7 @@ function ProductGrid({ products, onAdd, getBrandName, search }: ProductGridProps
 
   const renderSortIcon = (key: SortKey) => {
     if (sortConfig.key !== key) {
-      return <ArrowUpDown className="size-4 text-neutral-400" />
+      return <ArrowUpDown className="size-3.5 text-neutral-400" />
     }
     return sortIcons[sortConfig.direction]
   }
@@ -93,14 +100,14 @@ function ProductGrid({ products, onAdd, getBrandName, search }: ProductGridProps
                 <button
                   type="button"
                   onClick={() => handleSort(column.key)}
-                  className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-neutral-600"
+                  className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-neutral-600"
                 >
                   {column.label}
                   {renderSortIcon(column.key)}
                 </button>
               </th>
             ))}
-            <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wide text-neutral-600">
+            <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-neutral-600">
               Action
             </th>
           </tr>
@@ -117,21 +124,28 @@ function ProductGrid({ products, onAdd, getBrandName, search }: ProductGridProps
             </tr>
           )}
           {sortedProducts.map((product) => (
-            <tr key={product.id} className="hover:bg-neutral-50/60">
-              <td className="px-4 py-3 text-base font-semibold text-neutral-900">
+            <tr
+              key={product.id}
+              className="cursor-pointer hover:bg-neutral-50/60"
+              onClick={() => onQuickAdd(product)}
+            >
+              <td className="px-4 py-3 text-sm font-semibold text-neutral-900">
                 {product.name}
               </td>
-              <td className="px-4 py-3 text-base text-neutral-600">
+              <td className="px-4 py-3 text-sm text-neutral-600">
                 {getBrandName(product.brandId)}
               </td>
-              <td className="px-4 py-3 text-right text-base font-semibold">
+              <td className="px-4 py-3 text-right text-sm font-semibold">
                 {formatCurrency(product.price)}
               </td>
               <td className="px-4 py-3 text-right">
                 <Button
                   type="button"
-                  className="h-11 rounded-2xl px-6"
-                  onClick={() => onAdd(product)}
+                  className="h-10 rounded-2xl px-5 text-sm"
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    onAdd(product)
+                  }}
                 >
                   Add
                 </Button>

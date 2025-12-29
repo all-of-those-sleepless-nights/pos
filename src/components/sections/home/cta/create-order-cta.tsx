@@ -11,11 +11,10 @@ function CreateOrderCTA({ onCreate }: CreateOrderCTAProps) {
     <div className="flex flex-col items-center gap-6 text-center">
       <Button
         type="button"
-        size="lg"
-        className="h-32 w-[320px] rounded-3xl text-3xl font-semibold tracking-wide shadow-2xl"
+        className="h-28 w-full rounded-3xl text-3xl font-semibold tracking-wide shadow-2xl"
         onClick={onCreate}
       >
-        <Plus className="size-8" />
+        <Plus className="h-[2em] w-[2em]" />
         Create Order
       </Button>
     </div>

@@ -32,14 +32,14 @@ function ProductSelectionHeader({
           <Button
             type="button"
             variant="ghost"
-            className="h-14 rounded-2xl border border-border px-6 text-lg"
+            className="h-14 rounded-2xl border border-orange-600 bg-orange-500 pl-3 pr-4 text-2xl font-bold text-white shadow-lg transition hover:bg-orange-600 [&_svg]:size-10 hover:text-white"
             onClick={onBack}
           >
-            <ArrowLeft className="mr-2 size-5" />
+            <ArrowLeft />
             Back
           </Button>
           <div>
-            <p className="text-2xl font-semibold">{title}</p>
+            <p className="text-[1.43rem] font-semibold">{title}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -47,21 +47,21 @@ function ProductSelectionHeader({
             <button
               type="button"
               onClick={onToggleSearch}
-              className={`flex h-14 w-14 items-center justify-center rounded-full border transition ${showSearchBar ? "border-neutral-900 bg-neutral-900 text-white" : "border-neutral-200 bg-white text-neutral-900"}`}
+            className={`flex h-12 w-12 items-center justify-center rounded-full border transition ${showSearchBar ? "border-neutral-900 bg-neutral-900 text-white" : "border-neutral-200 bg-white text-neutral-900"}`}
               aria-label="Toggle search"
             >
-              <Search className="size-6" />
+              <Search className="size-5" />
             </button>
           )}
           <button
             type="button"
             onClick={onOpenOrder}
-            className="relative flex h-14 items-center gap-3 rounded-2xl bg-neutral-900 px-6 text-lg font-semibold text-white"
+            className="relative flex h-14 items-center gap-2 rounded-2xl bg-neutral-900 px-4 text-2xl font-semibold text-white"
           >
-            <ShoppingBag className="size-6" />
+            <ShoppingBag className="size-6 mr-1" />
             Order
             {badgeCount > 0 && (
-              <span className="absolute -top-2 -right-2 inline-flex min-h-8 min-w-8 items-center justify-center rounded-full bg-emerald-500 px-2 text-base font-bold text-white">
+              <span className="absolute -top-1.5 -right-1.5 inline-flex min-h-6 min-w-6 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-xs font-bold text-white">
                 {badgeCount}
               </span>
             )}
@@ -69,13 +69,13 @@ function ProductSelectionHeader({
         </div>
       </div>
       {showSearchBar && (
-        <div className="flex items-center gap-2 rounded-xl border border-border bg-white px-4 py-2 shadow-sm">
+        <div className="flex items-center gap-2 rounded-xl border border-border bg-white px-3 py-2 shadow-sm">
           <input
             type="search"
             value={searchValue}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Search products"
-            className="flex-1 bg-transparent text-base font-medium placeholder:text-neutral-400 focus:outline-none"
+            className="flex-1 bg-transparent text-sm font-medium placeholder:text-neutral-400 focus:outline-none"
           />
           {searchValue && (
             <button
@@ -84,7 +84,7 @@ function ProductSelectionHeader({
               className="rounded-full p-1 text-neutral-500 hover:bg-neutral-100"
               aria-label="Clear search"
             >
-              <X className="size-4" />
+              <X className="size-3.5" />
             </button>
           )}
           <button
@@ -93,7 +93,7 @@ function ProductSelectionHeader({
             className="rounded-full p-1 text-neutral-500 hover:bg-neutral-100"
             aria-label="Hide search"
           >
-            <X className="size-4" />
+            <X className="size-3.5" />
           </button>
         </div>
       )}

@@ -14,6 +14,7 @@ import type {
 import { brands, categories, products } from "@/constants/mock-data"
 import { useAlert } from "@/lib/alert-context"
 import { useOrder } from "@/lib/use-order"
+import { formatCurrency } from "@/lib/utils"
 
 const fieldLabels: Record<EditableOrderField, string> = {
   quantity: "Quantity",
@@ -31,8 +32,16 @@ type KeypadContextState =
       allowDecimal: boolean
     }
   | {
-      kind: "product-add"
+      kind: "product-quantity"
       product: Product
+      label: string
+      value: number
+      allowDecimal: boolean
+    }
+  | {
+      kind: "product-total"
+      product: Product
+      quantity: number
       label: string
       value: number
       allowDecimal: boolean
@@ -123,11 +132,20 @@ function HomePage() {
 
   const handleRequestAddProduct = (product: Product) => {
     setKeypadContext({
-      kind: "product-add",
+      kind: "product-quantity",
       product,
       label: `Quantity · ${product.name}`,
       value: 1,
       allowDecimal: false,
+    })
+  }
+
+  const handleQuickAddProduct = (product: Product) => {
+    addProduct(product, 1, product.price)
+    showAlert({
+      title: "Product added",
+      message: `${product.name} added to the order.`,
+      variant: "success",
     })
   }
 
@@ -165,19 +183,40 @@ function HomePage() {
     if (!keypadContext) return
     if (keypadContext.kind === "order") {
       updateItem(keypadContext.itemId, keypadContext.field, value)
-    } else if (keypadContext.kind === "product-add") {
+      setKeypadContext(null)
+      return
+    }
+
+    if (keypadContext.kind === "product-quantity") {
       const safeQuantity = Math.max(1, Math.round(value))
-      addProduct(keypadContext.product, safeQuantity)
+      const estimatedTotal = Number(
+        (keypadContext.product.price * safeQuantity).toFixed(2)
+      )
+      setKeypadContext({
+        kind: "product-total",
+        product: keypadContext.product,
+        quantity: safeQuantity,
+        label: `Total · ${keypadContext.product.name}`,
+        value: estimatedTotal,
+        allowDecimal: true,
+      })
+      return
+    }
+
+    if (keypadContext.kind === "product-total") {
+      const safeQuantity = keypadContext.quantity
+      const safeTotal = Math.max(0, value)
+      addProduct(keypadContext.product, safeQuantity, safeTotal)
       showAlert({
         title: "Product added",
         message:
           safeQuantity === 1
-            ? `${keypadContext.product.name} added to the order.`
-            : `${safeQuantity} × ${keypadContext.product.name} added to the order.`,
+            ? `${keypadContext.product.name} added for ${formatCurrency(safeTotal)}.`
+            : `${safeQuantity} × ${keypadContext.product.name} added for ${formatCurrency(safeTotal)}.`,
         variant: "success",
       })
+      setKeypadContext(null)
     }
-    setKeypadContext(null)
   }
 
   return (
@@ -199,6 +238,7 @@ function HomePage() {
         onSelectCategory={handleCategorySelect}
         onSelectBrand={handleBrandSelect}
         onAddProduct={handleRequestAddProduct}
+        onQuickAddProduct={handleQuickAddProduct}
         onOpenOrder={handleOpenOrder}
         search={productSearch}
         onSearchChange={setProductSearch}

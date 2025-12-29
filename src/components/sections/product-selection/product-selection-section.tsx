@@ -23,6 +23,7 @@ type ProductSelectionSectionProps = {
   onSelectCategory: (categoryId: string) => void
   onSelectBrand: (brandId: string) => void
   onAddProduct: (product: Product) => void
+  onQuickAddProduct: (product: Product) => void
   onOpenOrder: () => void
   search: string
   onSearchChange: (value: string) => void
@@ -41,6 +42,7 @@ function ProductSelectionSection({
   onSelectCategory,
   onSelectBrand,
   onAddProduct,
+  onQuickAddProduct,
   onOpenOrder,
   search,
   onSearchChange,
@@ -104,6 +106,7 @@ function ProductSelectionSection({
           onSelectCategory={onSelectCategory}
           onSelectBrand={onSelectBrand}
           onAddProduct={onAddProduct}
+          onQuickAddProduct={onQuickAddProduct}
           getBrandName={getBrandName}
           search={search}
         />

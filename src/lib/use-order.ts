@@ -8,34 +8,60 @@ const roundToCurrency = (value: number) =>
 export function useOrder() {
   const [items, setItems] = useState<OrderItem[]>([]);
 
-  const addProduct = useCallback((product: Product, quantity = 1) => {
-    if (quantity <= 0) {
-      return;
-    }
-    const safeQuantity = Math.round(quantity);
-
-    setItems((prev) => {
-      const existing = prev.find((item) => item.productId === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.productId === product.id
-            ? { ...item, quantity: item.quantity + safeQuantity }
-            : item
-        );
+  const addProduct = useCallback(
+    (product: Product, quantity = 1, totalOverride?: number) => {
+      if (quantity <= 0) {
+        return;
       }
+      const safeQuantity = Math.max(1, Math.round(quantity));
+      const overrideTotal =
+        typeof totalOverride === "number" && !Number.isNaN(totalOverride)
+          ? Math.max(0, totalOverride)
+          : null;
 
-      const nextItem: OrderItem = {
-        id: crypto.randomUUID(),
-        productId: product.id,
-        name: product.name,
-        unitPrice: product.price,
-        quantity: safeQuantity,
-        brandId: product.brandId,
-        brandName: product.brandName,
-      };
-      return [...prev, nextItem];
-    });
-  }, []);
+      setItems((prev) => {
+        const existing = prev.find((item) => item.productId === product.id);
+        if (existing) {
+          const combinedQuantity = existing.quantity + safeQuantity;
+          const combinedUnitPrice =
+            overrideTotal !== null
+              ? roundToCurrency(
+                  (existing.unitPrice * existing.quantity + overrideTotal) /
+                    combinedQuantity
+                )
+              : existing.unitPrice;
+
+          return prev.map((item) =>
+            item.productId === product.id
+              ? {
+                  ...item,
+                  quantity: combinedQuantity,
+                  unitPrice: combinedUnitPrice,
+                }
+              : item
+          );
+        }
+
+        const fallbackUnitPrice = roundToCurrency(product.price);
+        const initialUnitPrice =
+          overrideTotal !== null
+            ? roundToCurrency(overrideTotal / safeQuantity)
+            : fallbackUnitPrice;
+
+        const nextItem: OrderItem = {
+          id: crypto.randomUUID(),
+          productId: product.id,
+          name: product.name,
+          unitPrice: initialUnitPrice,
+          quantity: safeQuantity,
+          brandId: product.brandId,
+          brandName: product.brandName,
+        };
+        return [...prev, nextItem];
+      });
+    },
+    []
+  );
 
   const updateItem = useCallback(
     (itemId: string, kind: EditableOrderField, rawValue: number) => {

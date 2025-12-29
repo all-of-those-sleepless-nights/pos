@@ -19,6 +19,7 @@ type ProductSelectionBodyProps = {
   onSelectCategory: (categoryId: string) => void;
   onSelectBrand: (brandId: string) => void;
   onAddProduct: (product: Product) => void;
+  onQuickAddProduct: (product: Product) => void;
   getBrandName: (brandId: string) => string;
   search: string;
 };
@@ -33,6 +34,7 @@ function ProductSelectionBody({
   onSelectCategory,
   onSelectBrand,
   onAddProduct,
+  onQuickAddProduct,
   getBrandName,
   search,
 }: ProductSelectionBodyProps) {
@@ -70,6 +72,7 @@ function ProductSelectionBody({
         <ProductGrid
           products={currentProducts}
           onAdd={onAddProduct}
+          onQuickAdd={onQuickAddProduct}
           search={search}
           getBrandName={getBrandName}
         />
