@@ -73,32 +73,34 @@ function NumericKeypad({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-[448px] rounded-[24px] bg-white p-[24px] shadow-2xl"
+        className="w-full max-w-[600px] rounded-[32px] bg-white p-[32px] shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
-        <p className="text-[14px] uppercase tracking-widest text-muted-foreground">
+        <p className="text-[16px] uppercase tracking-[0.38em] text-muted-foreground">
           {label}
         </p>
-        <p className="mt-[8px] text-[48px] font-semibold">
+        <div className="mt-[14px] flex items-baseline justify-center gap-3 text-[52px] font-semibold">
           {valuePrefix && (
-            <span className="mr-2 text-[32px] uppercase text-muted-foreground">
+            <span className="text-[36px] uppercase tracking-widest text-muted-foreground">
               {valuePrefix}
             </span>
           )}
-          {value === "" ? "0" : value}
-        </p>
-        <div className="mt-[24px]">
+          <span className="text-[64px] tabular-nums">
+            {value === "" ? "0" : value}
+          </span>
+        </div>
+        <div className="mt-[32px]">
           <KeypadGrid
             allowDecimal={allowDecimal}
             onInput={handleInput}
             onBackspace={handleBackspace}
           />
         </div>
-        <div className="mt-[16px] grid grid-cols-3 gap-[12px]">
+        <div className="mt-[24px] grid grid-cols-3 gap-[16px]">
           <Button
             type="button"
             variant="secondary"
-            className="h-[56px] rounded-[16px] text-[18px] font-semibold"
+            className="h-[106px] rounded-[22px] text-[28px] font-semibold"
             onClick={handleClear}
           >
             Clear
@@ -106,14 +108,14 @@ function NumericKeypad({
           <Button
             type="button"
             variant="outline"
-            className="h-[56px] rounded-[16px] text-[18px] font-semibold"
+            className="h-[106px] rounded-[22px] text-[28px] font-semibold"
             onClick={onClose}
           >
             Cancel
           </Button>
           <Button
             type="button"
-            className="h-[56px] rounded-[16px] text-[18px] font-semibold"
+            className="h-[106px] rounded-[22px] text-[28px] font-semibold"
             onClick={handleConfirm}
           >
             Confirm

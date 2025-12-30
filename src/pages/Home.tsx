@@ -1,6 +1,7 @@
 import { useState } from "react"
 
 import NumericKeypad from "@/components/overlays/numeric-keypad/numeric-keypad"
+import ConfirmDialog from "@/components/overlays/confirm-dialog/confirm-dialog"
 import HomeSection from "@/components/sections/home/home-section"
 import OrderSection from "@/components/sections/order/order-section"
 import ProductSelectionSection from "@/components/sections/product-selection/product-selection-section"
@@ -59,6 +60,7 @@ function HomePage() {
   const [keypadContext, setKeypadContext] = useState<KeypadContextState | null>(
     null
   )
+  const [isClearDialogOpen, setIsClearDialogOpen] = useState(false)
 
   const {
     items,
@@ -156,17 +158,24 @@ function HomePage() {
     })
   }
 
-  const handleClearOrder = () => {
+  const handleRequestClearOrder = () => {
     if (!items.length) {
       return
     }
+    setIsClearDialogOpen(true)
+  }
+
+  const handleConfirmClearOrder = () => {
     clearOrder()
+    setIsClearDialogOpen(false)
     showAlert({
       title: "Order cleared",
       message: "All items removed from the order.",
       variant: "warning",
     })
   }
+
+  const handleCancelClearOrder = () => setIsClearDialogOpen(false)
 
   const handleEditField = (item: OrderItem, field: EditableOrderField) => {
     const initialValue =
@@ -269,7 +278,7 @@ function HomePage() {
         onEditField={handleEditField}
         onRemoveItem={removeItem}
         onDone={handleDone}
-        onClear={handleClearOrder}
+        onClear={handleRequestClearOrder}
       />
 
       <NumericKeypad
@@ -280,6 +289,15 @@ function HomePage() {
         valuePrefix={keypadValuePrefix}
         onClose={() => setKeypadContext(null)}
         onConfirm={handleKeypadConfirm}
+      />
+      <ConfirmDialog
+        open={isClearDialogOpen}
+        title="Clear the current order?"
+        message="This action will remove every item in the list."
+        confirmLabel="Confirm"
+        cancelLabel="Cancel"
+        onCancel={handleCancelClearOrder}
+        onConfirm={handleConfirmClearOrder}
       />
     </div>
   )

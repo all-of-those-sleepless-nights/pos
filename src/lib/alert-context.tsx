@@ -52,7 +52,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
 
       const timeout = window.setTimeout(
         () => dismissAlert(id),
-        payload.durationMs ?? 3500
+        payload.durationMs ?? 750
       )
       timers.current[id] = timeout
     },

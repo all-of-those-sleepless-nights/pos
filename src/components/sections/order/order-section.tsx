@@ -65,25 +65,33 @@ function OrderSection({
         isActive ? "flex" : "hidden"
       } h-full flex-1 flex-col bg-neutral-50 px-6 py-6`}
     >
-      <OrderHeader
-        itemCount={items.length}
-        total={total}
-        onBack={onBack}
-        onAddMore={onAddMore}
-      />
-      <div className="mt-6 flex flex-1 flex-col">
-        <OrderItemsList
-          items={items}
-          onEditField={onEditField}
-          getBrandName={getBrandName}
-          onRemoveItem={onRemoveItem}
-        />
-        <OrderFooter
-          totals={totals}
-          hasItems={items.length > 0}
-          onDone={onDone}
-          onClear={onClear}
-        />
+      <div className="flex h-full flex-col">
+        <div className="mx-auto w-full max-w-6xl">
+          <OrderHeader
+            itemCount={items.length}
+            total={total}
+            onBack={onBack}
+            onAddMore={onAddMore}
+          />
+        </div>
+        <div className="mt-6 flex-1">
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 pb-12">
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_0.5fr] lg:items-start">
+              <OrderItemsList
+                items={items}
+                onEditField={onEditField}
+                getBrandName={getBrandName}
+                onRemoveItem={onRemoveItem}
+              />
+              <OrderFooter
+                totals={totals}
+                hasItems={items.length > 0}
+                onDone={onDone}
+                onClear={onClear}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )

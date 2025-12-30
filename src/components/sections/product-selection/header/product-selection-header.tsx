@@ -1,6 +1,6 @@
-import { ArrowLeft, Search, ShoppingBag, X } from "lucide-react"
+import { Search, ShoppingBag, X } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import BackButton from "@/components/ui/back-button"
 
 type ProductSelectionHeaderProps = {
   title: string
@@ -29,15 +29,7 @@ function ProductSelectionHeader({
     <header className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <Button
-            type="button"
-            variant="ghost"
-            className="h-14 rounded-2xl border border-orange-600 bg-orange-500 pl-3 pr-4 text-2xl font-bold text-white shadow-lg transition hover:bg-orange-600 [&_svg]:size-10 hover:text-white"
-            onClick={onBack}
-          >
-            <ArrowLeft />
-            Back
-          </Button>
+          <BackButton onClick={onBack} />
           <div>
             <p className="text-[1.43rem] font-semibold">{title}</p>
           </div>

@@ -20,7 +20,7 @@ function AlertStack({ alerts, onDismiss }: AlertStackProps) {
   }
 
   return (
-    <div className="pointer-events-none fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+    <div className="pointer-events-none fixed top-6 left-1/2 z-50 flex -translate-x-1/2 flex-col items-center gap-3">
       {alerts.map((alert) => (
         <div key={alert.id} className="pointer-events-auto">
           <AlertCard

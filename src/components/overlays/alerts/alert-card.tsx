@@ -29,22 +29,24 @@ function AlertCard({
   variant = "info",
   onDismiss,
 }: AlertCardProps) {
+  const displayText = title ?? message
+
   return (
     <div
       className={cn(
-        "flex min-w-[280px] max-w-sm items-start gap-3 rounded-2xl px-4 py-3 shadow-xl",
+        "flex w-fit max-w-md items-center gap-3 rounded-2xl px-5 py-4 text-lg font-semibold uppercase tracking-wide shadow-xl",
         variantStyles[variant]
       )}
     >
-      <div className="mt-1">{variantIcon[variant]}</div>
-      <div className="flex-1">
-        {title && <p className="text-sm font-semibold uppercase">{title}</p>}
-        <p className="text-base font-medium leading-snug">{message}</p>
+      <div className="flex items-center gap-3">
+        {variantIcon[variant]}
+        <span>{displayText}</span>
       </div>
       <button
         type="button"
         onClick={onDismiss}
-        className="rounded-full p-1 transition hover:bg-white/20"
+        className="ml-auto rounded-full p-1 transition hover:bg-white/20"
+        aria-label="Dismiss notification"
       >
         <X className="size-4" />
       </button>
