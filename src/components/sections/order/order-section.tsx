@@ -9,6 +9,7 @@ type OrderSectionProps = {
   items: OrderItem[]
   total: number
   onBack: () => void
+  onAddMore: () => void
   onEditField: (item: OrderItem, field: EditableOrderField) => void
   onRemoveItem: (itemId: string) => void
   onDone: () => void
@@ -43,6 +44,7 @@ function OrderSection({
   items,
   total,
   onBack,
+  onAddMore,
   onEditField,
   onRemoveItem,
   onDone,
@@ -63,7 +65,12 @@ function OrderSection({
         isActive ? "flex" : "hidden"
       } h-full flex-1 flex-col bg-neutral-50 px-6 py-6`}
     >
-      <OrderHeader itemCount={items.length} total={total} onBack={onBack} />
+      <OrderHeader
+        itemCount={items.length}
+        total={total}
+        onBack={onBack}
+        onAddMore={onAddMore}
+      />
       <div className="mt-6 flex flex-1 flex-col">
         <OrderItemsList
           items={items}

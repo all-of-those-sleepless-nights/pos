@@ -9,6 +9,7 @@ type NumericKeypadProps = {
   label: string
   initialValue?: number
   allowDecimal?: boolean
+  valuePrefix?: string
   onClose: () => void
   onConfirm: (value: number) => void
 }
@@ -18,6 +19,7 @@ function NumericKeypad({
   label,
   initialValue,
   allowDecimal,
+  valuePrefix,
   onClose,
   onConfirm,
 }: NumericKeypadProps) {
@@ -78,6 +80,11 @@ function NumericKeypad({
           {label}
         </p>
         <p className="mt-[8px] text-[48px] font-semibold">
+          {valuePrefix && (
+            <span className="mr-2 text-[32px] uppercase text-muted-foreground">
+              {valuePrefix}
+            </span>
+          )}
           {value === "" ? "0" : value}
         </p>
         <div className="mt-[24px]">

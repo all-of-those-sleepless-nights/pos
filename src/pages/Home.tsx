@@ -112,6 +112,13 @@ function HomePage() {
 
   const handleOpenOrder = () => setActiveSection("order")
   const handleBackFromOrder = () => setActiveSection("products")
+  const handleAddMoreProducts = () => {
+    setActiveSection("products")
+    setSelectionView("categories")
+    setSelectedCategoryId(null)
+    setSelectedBrandId(null)
+    setProductSearch("")
+  }
 
   const handleDone = () => {
     if (!items.length) {
@@ -219,6 +226,16 @@ function HomePage() {
     }
   }
 
+  let keypadValuePrefix: string | undefined
+  if (keypadContext) {
+    if (
+      keypadContext.kind === "product-total" ||
+      (keypadContext.kind === "order" && keypadContext.field !== "quantity")
+    ) {
+      keypadValuePrefix = "RM"
+    }
+  }
+
   return (
     <div className="flex flex-1 flex-col">
       <HomeSection
@@ -248,6 +265,7 @@ function HomePage() {
         items={items}
         total={orderTotal}
         onBack={handleBackFromOrder}
+        onAddMore={handleAddMoreProducts}
         onEditField={handleEditField}
         onRemoveItem={removeItem}
         onDone={handleDone}
@@ -259,6 +277,7 @@ function HomePage() {
         label={keypadContext?.label ?? ""}
         initialValue={keypadContext?.value}
         allowDecimal={keypadContext?.allowDecimal}
+        valuePrefix={keypadValuePrefix}
         onClose={() => setKeypadContext(null)}
         onConfirm={handleKeypadConfirm}
       />

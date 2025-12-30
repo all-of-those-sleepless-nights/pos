@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 
 import { POS_CURRENCY_SYMBOL } from "@/constants/types";
 import { Button } from "@/components/ui/button";
@@ -7,9 +7,10 @@ type OrderHeaderProps = {
   itemCount: number;
   total: number;
   onBack: () => void;
+  onAddMore: () => void;
 };
 
-function OrderHeader({ itemCount, total, onBack }: OrderHeaderProps) {
+function OrderHeader({ itemCount, total, onBack, onAddMore }: OrderHeaderProps) {
   return (
     <header className="mb-2 flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -30,6 +31,15 @@ function OrderHeader({ itemCount, total, onBack }: OrderHeaderProps) {
           </p>
         </div>
       </div>
+      <button
+        type="button"
+        onClick={onAddMore}
+        className="flex h-14 items-center gap-2 rounded-2xl bg-neutral-900 px-4 text-2xl font-semibold text-white shadow-lg transition hover:bg-neutral-800"
+        aria-label="Add more items"
+      >
+        <Plus className="size-6" />
+        Add more
+      </button>
     </header>
   );
 }
