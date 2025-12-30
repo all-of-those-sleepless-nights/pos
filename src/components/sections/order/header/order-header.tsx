@@ -1,6 +1,5 @@
 import { Plus } from "lucide-react"
 
-import { POS_CURRENCY_SYMBOL } from "@/constants/types"
 import BackButton from "@/components/ui/back-button"
 
 type OrderHeaderProps = {
@@ -10,7 +9,7 @@ type OrderHeaderProps = {
   onAddMore: () => void
 }
 
-function OrderHeader({ itemCount, total, onBack, onAddMore }: OrderHeaderProps) {
+function OrderHeader({ onBack, onAddMore }: OrderHeaderProps) {
   return (
     <header className="flex flex-col gap-4">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { POS_CURRENCY_SYMBOL } from "@/constants/types";
 import { formatCurrency } from "@/lib/utils";
 
 type Totals = {
