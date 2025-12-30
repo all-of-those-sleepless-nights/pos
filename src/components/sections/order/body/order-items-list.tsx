@@ -28,7 +28,7 @@ function OrderItemsList({
           </p>
         </div>
       ) : (
-        <div className="space-y-3 pb-56">
+        <div className="space-y-3 pb-32">
           {items.map((item) => (
             <div
               key={item.id}
