@@ -69,16 +69,6 @@ function ProductSelectionHeader({
             placeholder="Search products"
             className="flex-1 bg-transparent text-sm font-medium placeholder:text-neutral-400 focus:outline-none"
           />
-          {searchValue && (
-            <button
-              type="button"
-              onClick={() => onSearchChange("")}
-              className="rounded-full p-1 text-neutral-500 hover:bg-neutral-100"
-              aria-label="Clear search"
-            >
-              <X className="size-3.5" />
-            </button>
-          )}
           <button
             type="button"
             onClick={onToggleSearch}

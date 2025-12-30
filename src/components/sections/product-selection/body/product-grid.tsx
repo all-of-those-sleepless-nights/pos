@@ -100,14 +100,14 @@ function ProductGrid({
                 <button
                   type="button"
                   onClick={() => handleSort(column.key)}
-                  className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-neutral-600"
+                  className="flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-neutral-600"
                 >
                   {column.label}
                   {renderSortIcon(column.key)}
                 </button>
               </th>
             ))}
-            <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-neutral-600">
+            <th className="px-4 py-3 text-right text-sm font-semibold uppercase tracking-wide text-neutral-600">
               Action
             </th>
           </tr>
@@ -117,7 +117,7 @@ function ProductGrid({
             <tr>
               <td
                 colSpan={4}
-                className="px-4 py-12 text-center text-lg text-muted-foreground"
+                className="px-4 py-12 text-center text-xl text-muted-foreground"
               >
                 No products found
               </td>
@@ -129,19 +129,19 @@ function ProductGrid({
               className="cursor-pointer hover:bg-neutral-50/60"
               onClick={() => onQuickAdd(product)}
             >
-              <td className="px-4 py-3 text-sm font-semibold text-neutral-900">
+              <td className="px-4 py-3 text-base font-semibold text-neutral-900">
                 {product.name}
               </td>
-              <td className="px-4 py-3 text-sm text-neutral-600">
+              <td className="px-4 py-3 text-base text-neutral-600">
                 {getBrandName(product.brandId)}
               </td>
-              <td className="px-4 py-3 text-right text-sm font-semibold">
+              <td className="px-4 py-3 text-right text-base font-semibold">
                 {formatCurrency(product.price)}
               </td>
               <td className="px-4 py-3 text-right">
                 <Button
                   type="button"
-                  className="h-10 rounded-2xl px-5 text-sm"
+                  className="h-10 rounded-2xl px-5 text-base"
                   onClick={(event) => {
                     event.stopPropagation()
                     onAdd(product)

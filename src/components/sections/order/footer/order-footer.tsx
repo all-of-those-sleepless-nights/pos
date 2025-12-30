@@ -1,42 +1,34 @@
-import { useState } from "react"
+import { useState } from "react";
 
-import { ChevronDown } from "lucide-react"
+import { ChevronDown } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { POS_CURRENCY_SYMBOL } from "@/constants/types"
-import { formatCurrency } from "@/lib/utils"
+import { Button } from "@/components/ui/button";
+import { POS_CURRENCY_SYMBOL } from "@/constants/types";
+import { formatCurrency } from "@/lib/utils";
 
 type Totals = {
-  quantity: number
-  subtotal: number
-  tax: number
-  rounding: number
-  total: number
-}
+  quantity: number;
+  subtotal: number;
+  tax: number;
+  rounding: number;
+  total: number;
+};
 
 type OrderFooterProps = {
-  totals: Totals
-  hasItems: boolean
-  onDone: () => void
-  onClear: () => void
-}
+  totals: Totals;
+  hasItems: boolean;
+  onDone: () => void;
+  onClear: () => void;
+};
 
-function OrderFooter({ totals, hasItems, onDone, onClear }: OrderFooterProps) {
-  const [showBreakdown, setShowBreakdown] = useState(false)
+function OrderFooter({ totals, hasItems, onDone }: OrderFooterProps) {
+  const [showBreakdown, setShowBreakdown] = useState(false);
 
   return (
-    <aside className="h-fit self-start rounded-2xl border border-border bg-white p-6 shadow-sm lg:sticky lg:top-2">
-      <div className="space-y-6">
-        <div className="rounded-2xl border border-dashed border-neutral-200 bg-neutral-50 p-4">
+    <aside className="h-fit w-full self-start border border-border bg-white p-6 shadow-sm fixed bottom-0 left-0">
+      <div className="flex items-center justify-end gap-3">
+        <div className="rounded-2xl border border-dashed border-neutral-200 bg-neutral-50 p-5">
           <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">
-                Total Amount ({POS_CURRENCY_SYMBOL})
-              </p>
-              <p className="text-4xl font-extrabold text-neutral-900">
-                {formatCurrency(totals.total)}
-              </p>
-            </div>
             <button
               type="button"
               onClick={() => setShowBreakdown((prev) => !prev)}
@@ -45,9 +37,19 @@ function OrderFooter({ totals, hasItems, onDone, onClear }: OrderFooterProps) {
               aria-label="Toggle total breakdown"
             >
               <ChevronDown
-                className={`size-6 transition ${showBreakdown ? "rotate-180" : ""}`}
+                className={`size-6 transition ${
+                  showBreakdown ? "rotate-180" : ""
+                }`}
               />
             </button>
+            <div>
+              {/* <p className="text-xs font-bold uppercase tracking-widest text-neutral-500">
+                Total Amount ({POS_CURRENCY_SYMBOL})
+              </p> */}
+              <p className="text-4xl font-extrabold text-neutral-900">
+                {formatCurrency(totals.total)}
+              </p>
+            </div>
           </div>
           {showBreakdown && (
             <div className="mt-6 space-y-3 text-sm">
@@ -90,13 +92,13 @@ function OrderFooter({ totals, hasItems, onDone, onClear }: OrderFooterProps) {
           <Button
             type="button"
             variant="ghost"
-            className="h-16 w-full rounded-xl bg-neutral-900 text-lg font-bold text-white shadow-lg hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-600"
+            className="px-8 py-6 h-fit w-fit rounded-xl bg-neutral-900 text-3xl font-bold text-white shadow-lg hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-600"
             disabled={!hasItems}
             onClick={onDone}
           >
             Done
           </Button>
-          <Button
+          {/* <Button
             type="button"
             variant="ghost"
             className="h-16 w-full rounded-xl border-2 border-neutral-200 bg-white text-lg font-bold text-neutral-700 hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
@@ -104,11 +106,11 @@ function OrderFooter({ totals, hasItems, onDone, onClear }: OrderFooterProps) {
             onClick={onClear}
           >
             Clear Order
-          </Button>
+          </Button> */}
         </div>
       </div>
     </aside>
-  )
+  );
 }
 
-export default OrderFooter
+export default OrderFooter;

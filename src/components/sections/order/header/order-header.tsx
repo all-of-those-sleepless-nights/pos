@@ -20,10 +20,10 @@ function OrderHeader({ itemCount, total, onBack, onAddMore }: OrderHeaderProps) 
             <p className="text-[1.5rem] font-semibold text-neutral-900">
               Current Order
             </p>
-            <p className="text-sm font-medium text-neutral-500">
+            {/* <p className="text-sm font-medium text-neutral-500">
               {itemCount} item{itemCount === 1 ? "" : "s"} · {POS_CURRENCY_SYMBOL}{" "}
               {total.toFixed(2)}
-            </p>
+            </p> */}
           </div>
         </div>
         <div className="flex justify-end">
