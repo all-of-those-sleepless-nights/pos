@@ -2,13 +2,21 @@ import { Delete } from "lucide-react"
 
 type KeypadGridProps = {
   allowDecimal?: boolean
+  showQuantityMode?: boolean
+  onToggleMode?: () => void
   onInput: (value: string) => void
   onBackspace: () => void
 }
 
 const digitKeys = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
-function KeypadGrid({ allowDecimal, onInput, onBackspace }: KeypadGridProps) {
+function KeypadGrid({
+  allowDecimal,
+  showQuantityMode,
+  onToggleMode,
+  onInput,
+  onBackspace,
+}: KeypadGridProps) {
   return (
     <div className="grid grid-cols-3 gap-[16px]">
       {digitKeys.map((digit) => (
@@ -21,7 +29,16 @@ function KeypadGrid({ allowDecimal, onInput, onBackspace }: KeypadGridProps) {
           {digit}
         </button>
       ))}
-      {allowDecimal && (
+      {showQuantityMode && onToggleMode && (
+        <button
+          type="button"
+          onClick={onToggleMode}
+          className="h-[106px] rounded-[22px] bg-orange-500 text-[32px] font-bold text-white"
+        >
+         +/−
+        </button>
+      )}
+      {!showQuantityMode && allowDecimal && (
         <button
           type="button"
           onClick={() => onInput(".")}
@@ -30,7 +47,9 @@ function KeypadGrid({ allowDecimal, onInput, onBackspace }: KeypadGridProps) {
           .
         </button>
       )}
-      {!allowDecimal && <span className="h-[106px]" aria-hidden="true" />}
+      {!showQuantityMode && !allowDecimal && (
+        <span className="h-[106px]" aria-hidden="true" />
+      )}
       <button
         type="button"
         onClick={() => onInput("0")}

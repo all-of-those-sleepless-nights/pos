@@ -96,6 +96,54 @@ export function useOrder() {
     []
   );
 
+  const reduceProduct = useCallback(
+    (product: Product, quantity = 1, totalOverride?: number) => {
+      if (quantity <= 0) {
+        return false;
+      }
+      const safeQuantity = Math.max(1, Math.round(quantity));
+
+      let found = false;
+      setItems((prev) => {
+        const existing = prev.find((item) => item.productId === product.id);
+        if (!existing) {
+          return prev;
+        }
+        found = true;
+
+        const newQuantity = existing.quantity - safeQuantity;
+        if (newQuantity <= 0) {
+          return prev.filter((item) => item.productId !== product.id);
+        }
+
+        const overrideTotal =
+          typeof totalOverride === "number" && !Number.isNaN(totalOverride)
+            ? Math.max(0, totalOverride)
+            : null;
+
+        const newUnitPrice =
+          overrideTotal !== null
+            ? roundToCurrency(
+                (existing.unitPrice * existing.quantity - overrideTotal) /
+                  newQuantity
+              )
+            : existing.unitPrice;
+
+        return prev.map((item) =>
+          item.productId === product.id
+            ? {
+                ...item,
+                quantity: newQuantity,
+                unitPrice: Math.max(0, newUnitPrice),
+              }
+            : item
+        );
+      });
+      return found;
+    },
+    []
+  );
+
   const removeItem = useCallback((itemId: string) => {
     setItems((prev) => prev.filter((item) => item.id !== itemId));
   }, []);
@@ -121,6 +169,7 @@ export function useOrder() {
     badgeCount,
     orderTotal,
     addProduct,
+    reduceProduct,
     updateItem,
     removeItem,
     clearOrder,

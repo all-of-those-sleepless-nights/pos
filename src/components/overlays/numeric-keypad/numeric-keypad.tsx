@@ -10,6 +10,8 @@ type NumericKeypadProps = {
   initialValue?: number
   allowDecimal?: boolean
   valuePrefix?: string
+  showQuantityMode?: boolean
+  showDeductPrefix?: boolean
   onClose: () => void
   onConfirm: (value: number) => void
 }
@@ -20,10 +22,13 @@ function NumericKeypad({
   initialValue,
   allowDecimal,
   valuePrefix,
+  showQuantityMode,
+  showDeductPrefix,
   onClose,
   onConfirm,
 }: NumericKeypadProps) {
   const [value, setValue] = useState("")
+  const [isAddMode, setIsAddMode] = useState(true)
 
   useEffect(() => {
     if (open) {
@@ -32,6 +37,7 @@ function NumericKeypad({
           ? String(initialValue)
           : ""
       )
+      setIsAddMode(true)
     }
   }, [initialValue, open])
 
@@ -64,7 +70,9 @@ function NumericKeypad({
     value === "" ? 0 : allowDecimal ? parseFloat(value) : parseInt(value, 10)
 
   const handleConfirm = () => {
-    onConfirm(Number.isNaN(parsedValue) ? 0 : parsedValue)
+    const baseValue = Number.isNaN(parsedValue) ? 0 : parsedValue
+    const finalValue = showQuantityMode && !isAddMode ? -baseValue : baseValue
+    onConfirm(finalValue)
   }
 
   return (
@@ -80,6 +88,16 @@ function NumericKeypad({
           {label}
         </p>
         <div className="mt-[14px] flex items-baseline justify-center gap-3 text-[52px] font-semibold">
+          {showQuantityMode && (
+            <span className="text-[36px] self-center text-muted-foreground">
+              {isAddMode ? "+" : "−"}
+            </span>
+          )}
+          {showDeductPrefix && (
+            <span className="text-[36px] self-center text-muted-foreground">
+              −
+            </span>
+          )}
           {valuePrefix && (
             <span className="text-[36px] uppercase tracking-widest text-muted-foreground">
               {valuePrefix}
@@ -92,6 +110,8 @@ function NumericKeypad({
         <div className="mt-[32px]">
           <KeypadGrid
             allowDecimal={allowDecimal}
+            showQuantityMode={showQuantityMode}
+            onToggleMode={() => setIsAddMode((prev) => !prev)}
             onInput={handleInput}
             onBackspace={handleBackspace}
           />

@@ -67,6 +67,7 @@ function HomePage() {
     badgeCount,
     orderTotal,
     addProduct,
+    reduceProduct,
     updateItem,
     removeItem,
     clearOrder,
@@ -204,15 +205,19 @@ function HomePage() {
     }
 
     if (keypadContext.kind === "product-quantity") {
-      const safeQuantity = Math.max(1, Math.round(value))
+      const isSubtract = value < 0
+      const safeQuantity = Math.max(1, Math.round(Math.abs(value)))
+      const signedQuantity = isSubtract ? -safeQuantity : safeQuantity
       const estimatedTotal = Number(
         (keypadContext.product.price * safeQuantity).toFixed(2)
       )
       setKeypadContext({
         kind: "product-total",
         product: keypadContext.product,
-        quantity: safeQuantity,
-        label: `Total · ${keypadContext.product.name}`,
+        quantity: signedQuantity,
+        label: isSubtract
+          ? `Deduct · ${keypadContext.product.name}`
+          : `Total · ${keypadContext.product.name}`,
         value: estimatedTotal,
         allowDecimal: true,
       })
@@ -220,27 +225,54 @@ function HomePage() {
     }
 
     if (keypadContext.kind === "product-total") {
-      const safeQuantity = keypadContext.quantity
+      const isSubtract = keypadContext.quantity < 0
+      const safeQuantity = Math.abs(keypadContext.quantity)
       const safeTotal = Math.max(0, value)
-      addProduct(keypadContext.product, safeQuantity, safeTotal)
-      showAlert({
-        title: "Product added",
-        message:
-          safeQuantity === 1
-            ? `${keypadContext.product.name} added for ${formatCurrency(safeTotal)}.`
-            : `${safeQuantity} × ${keypadContext.product.name} added for ${formatCurrency(safeTotal)}.`,
-        variant: "success",
-      })
+
+      if (isSubtract) {
+        const found = reduceProduct(
+          keypadContext.product,
+          safeQuantity,
+          safeTotal
+        )
+        if (found) {
+          showAlert({
+            title: "Product reduced",
+            message:
+              safeQuantity === 1
+                ? `${keypadContext.product.name} reduced by ${formatCurrency(safeTotal)}.`
+                : `${safeQuantity} × ${keypadContext.product.name} reduced by ${formatCurrency(safeTotal)}.`,
+            variant: "warning",
+          })
+        } else {
+          showAlert({
+            title: "Product not found in order",
+            message: `${keypadContext.product.name} is not in the order.`,
+            variant: "warning",
+          })
+        }
+      } else {
+        addProduct(keypadContext.product, safeQuantity, safeTotal)
+        showAlert({
+          title: "Product added",
+          message:
+            safeQuantity === 1
+              ? `${keypadContext.product.name} added for ${formatCurrency(safeTotal)}.`
+              : `${safeQuantity} × ${keypadContext.product.name} added for ${formatCurrency(safeTotal)}.`,
+          variant: "success",
+        })
+      }
       setKeypadContext(null)
     }
   }
 
   let keypadValuePrefix: string | undefined
+  let showDeductPrefix = false
   if (keypadContext) {
-    if (
-      keypadContext.kind === "product-total" ||
-      (keypadContext.kind === "order" && keypadContext.field !== "quantity")
-    ) {
+    if (keypadContext.kind === "product-total") {
+      keypadValuePrefix = "RM"
+      showDeductPrefix = keypadContext.quantity < 0
+    } else if (keypadContext.kind === "order" && keypadContext.field !== "quantity") {
       keypadValuePrefix = "RM"
     }
   }
@@ -287,6 +319,8 @@ function HomePage() {
         initialValue={keypadContext?.value}
         allowDecimal={keypadContext?.allowDecimal}
         valuePrefix={keypadValuePrefix}
+        showQuantityMode={keypadContext?.kind === "product-quantity"}
+        showDeductPrefix={showDeductPrefix}
         onClose={() => setKeypadContext(null)}
         onConfirm={handleKeypadConfirm}
       />
