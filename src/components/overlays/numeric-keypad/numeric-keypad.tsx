@@ -1,3 +1,4 @@
+import { Minus, Plus } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -10,6 +11,7 @@ type NumericKeypadProps = {
   initialValue?: number
   allowDecimal?: boolean
   valuePrefix?: string
+  showIncrementButtons?: boolean
   onClose: () => void
   onConfirm: (value: number) => void
 }
@@ -20,6 +22,7 @@ function NumericKeypad({
   initialValue,
   allowDecimal,
   valuePrefix,
+  showIncrementButtons,
   onClose,
   onConfirm,
 }: NumericKeypadProps) {
@@ -60,6 +63,21 @@ function NumericKeypad({
 
   const handleClear = () => setValue("")
 
+  const handleDecrement = () => {
+    setValue((current) => {
+      const currentNum = current === "" ? 0 : allowDecimal ? parseFloat(current) : parseInt(current, 10)
+      const newValue = Math.max(0, currentNum - 1)
+      return newValue === 0 ? "" : String(newValue)
+    })
+  }
+
+  const handleIncrement = () => {
+    setValue((current) => {
+      const currentNum = current === "" ? 0 : allowDecimal ? parseFloat(current) : parseInt(current, 10)
+      return String(currentNum + 1)
+    })
+  }
+
   const parsedValue =
     value === "" ? 0 : allowDecimal ? parseFloat(value) : parseInt(value, 10)
 
@@ -79,15 +97,35 @@ function NumericKeypad({
         <p className="text-[16px] uppercase tracking-[0.38em] text-muted-foreground">
           {label}
         </p>
-        <div className="mt-[14px] flex items-baseline justify-center gap-3 text-[52px] font-semibold">
-          {valuePrefix && (
-            <span className="text-[36px] uppercase tracking-widest text-muted-foreground">
-              {valuePrefix}
-            </span>
+        <div className="mt-[14px] flex items-center justify-center gap-4">
+          {showIncrementButtons && (
+            <button
+              type="button"
+              className="flex h-[64px] w-[64px] items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200 active:bg-gray-300"
+              onClick={handleDecrement}
+            >
+              <Minus className="h-8 w-8" />
+            </button>
           )}
-          <span className="text-[64px] tabular-nums">
-            {value === "" ? "0" : value}
-          </span>
+          <div className="flex items-baseline gap-3 text-[52px] font-semibold">
+            {valuePrefix && (
+              <span className="text-[36px] uppercase tracking-widest text-muted-foreground">
+                {valuePrefix}
+              </span>
+            )}
+            <span className="text-[64px] tabular-nums">
+              {value === "" ? "0" : value}
+            </span>
+          </div>
+          {showIncrementButtons && (
+            <button
+              type="button"
+              className="flex h-[64px] w-[64px] items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200 active:bg-gray-300"
+              onClick={handleIncrement}
+            >
+              <Plus className="h-8 w-8" />
+            </button>
+          )}
         </div>
         <div className="mt-[32px]">
           <KeypadGrid
@@ -96,15 +134,15 @@ function NumericKeypad({
             onBackspace={handleBackspace}
           />
         </div>
-        <div className="mt-[24px] grid grid-cols-3 gap-[16px]">
-          <Button
+        <div className="mt-[24px] grid grid-cols-2 gap-[16px]">
+          {/* <Button
             type="button"
             variant="secondary"
             className="h-[106px] rounded-[22px] text-[28px] font-semibold"
             onClick={handleClear}
           >
             Clear
-          </Button>
+          </Button> */}
           <Button
             type="button"
             variant="outline"

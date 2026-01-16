@@ -287,6 +287,10 @@ function HomePage() {
         initialValue={keypadContext?.value}
         allowDecimal={keypadContext?.allowDecimal}
         valuePrefix={keypadValuePrefix}
+        showIncrementButtons={
+          keypadContext?.kind === "product-quantity" ||
+          (keypadContext?.kind === "order" && keypadContext?.field === "quantity")
+        }
         onClose={() => setKeypadContext(null)}
         onConfirm={handleKeypadConfirm}
       />
