@@ -82,9 +82,17 @@ function HomePage() {
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategoryId(categoryId)
-    setSelectedBrandId(null)
-    setSelectionView("brands")
     setProductSearch("")
+
+    // Only show brand selection for "tyre" category
+    if (categoryId === "tyre") {
+      setSelectedBrandId(null)
+      setSelectionView("brands")
+    } else {
+      // For non-tyre categories, use category id as brand id and go directly to products
+      setSelectedBrandId(categoryId)
+      setSelectionView("products")
+    }
   }
 
   const handleBrandSelect = (brandId: string) => {
@@ -95,7 +103,15 @@ function HomePage() {
 
   const handleProductSectionBack = () => {
     if (selectionView === "products") {
-      setSelectionView("brands")
+      // For tyre category, go back to brands; for others, go back to categories
+      if (selectedCategoryId === "tyre") {
+        setSelectionView("brands")
+        setSelectedBrandId(null)
+      } else {
+        setSelectionView("categories")
+        setSelectedBrandId(null)
+        setSelectedCategoryId(null)
+      }
       setProductSearch("")
       return
     }
