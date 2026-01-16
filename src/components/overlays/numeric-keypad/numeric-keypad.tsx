@@ -61,7 +61,7 @@ function NumericKeypad({
     setValue((current) => current.slice(0, -1))
   }
 
-  const handleClear = () => setValue("")
+  // const handleClear = () => setValue("")
 
   const handleDecrement = () => {
     setValue((current) => {
